@@ -15,7 +15,7 @@ https://github.com/Alchemist77/pybullet-ur5-equipped-with-robotiq-140/blob/maste
 
 To add S-RL Toolbox see: https://s-rl-toolbox.readthedocs.io/en/latest/
 
-1. Download the project-master folder. Note: you will need anaconda to run this program. I recommend installing it, creating/initializing an environment, installing python 3.6 in it as that is the version you'll need.
+1. Download the project-master folder in the master branch. Note: you will need anaconda to run this program. I recommend installing it, creating/initializing an environment, installing python 3.6 in it as that is the version you'll need.
 2. cd into the folder on your local laptop
 3. Run `pip install -r requirements.txt`. You will also have to install pybullet `pip install pybullet`, gym `pip install gym`, opencv `pip install opencv-python`, pytorch  `pip install torch torchvision`. 
 4. Run `python train_peg_insertion.py` to train the agent. If you get any errors, you might have to change any paths that are specified for me to your own.
