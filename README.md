@@ -9,6 +9,9 @@ How it works: it uses self-supervision to learn a compact and multimodal represe
 
 This implementation can also be used to understand force-torque (F/T) control for contact-rich manipulation tasks as at each step the force-torque (F/T) reading is captured at the joint connected with the end-effector.
 
+![f:t-readings](https://user-images.githubusercontent.com/44557946/133675110-7faaf2a8-86fe-471d-b586-c96f8177bead.JPG)
+>
+
 # Instructions 
 
 To add Robotiq see:
