@@ -4,6 +4,7 @@ We use self-supervision to learn a compact and multimodal representation of our 
 
 How it works: it uses self-supervision to learn a compact and multimodal representation of our sensory inputs. This can improve the sample efficiency of our policy learning. We train a policy in #PyBullet (on a Kuka LBR iiwa robot arm) using PPO for peg-in-hole tasks.
 
+<img width="1019" alt="demo" src="https://user-images.githubusercontent.com/44557946/133674957-bcee06ad-4320-479f-99ff-18636b4a3535.PNG">
 
 
 This implementation can also be used to understand force-torque (F/T) control for contact-rich manipulation tasks as at each step the force-torque (F/T) reading is captured at the joint connected with the end-effector.
