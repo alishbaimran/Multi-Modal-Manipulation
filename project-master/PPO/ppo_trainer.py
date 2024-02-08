@@ -86,26 +86,55 @@ class PPOTrainer(BaseTrainer):
         assert action_log_probs.requires_grad
         assert dist_entropy.requires_grad
 
-        # [TODO] Implement policy loss
+        ###############[TODO] Implement policy loss########################
+        ###################################################################
+        # 一般 ratio 是两种策略下动作的概率比
+        # 在程序实现中，用的是对动作分布取对数，而后使用e指数相减的方法
         ratio = torch.exp(action_log_probs.float() - old_action_log_probs_batch.float())
+
         surr1 = ratio * adv_targ
+
+        # torch.clamp()函数用于对张量中的值进行截断操作
+        # torch.clamp(input, min, max, out=None) → Tensor
         surr2 = torch.clamp(ratio, min=1.0 - self.clip_param, max=1.0 + self.clip_param) * adv_targ
 
+        # L^CLIP()=E{min[r()A_t,clip{r(),1-sigma,1+sigma}A_t]}
+        # surr1 = min[r()A_t] 
+        # surr2 = torch.clamp(ratio, min=1.0 - self.clip_param, max=1.0 + self.clip_param) * adv_targ
         policy_loss = - torch.min(surr1, surr2).mean()
-
-        # [TODO] Implement value loss
+        ######################################################################
+        ######################################################################
+       
+        ######################[TODO] Implement value loss#####################
+        ######################################################################
         # value_loss = F.mse_loss(return_batch, values)
+        # 对应的为对应的值的均方误差
+        # return_batch 折扣后的累计奖励
+        # values 当前的估计
         value_loss = 0.5 * (return_batch - values).pow(2).mean()
+        ######################################################################
+        ######################################################################
+
+        ###############################总体Loss函数############################
+        ######################################################################
 
         # This is the total loss
+        # dist_entropy from evaluate_actions 
         loss = policy_loss + self.config.value_loss_weight * value_loss - self.config.entropy_loss_weight * dist_entropy
+        ######################################################################
 
         return loss, policy_loss, value_loss, dist_entropy
 
     def update(self, rollout):
+        ######################################################################
         # Get the normalized advantages
+        #在强化学习中，advantages（优势）是指在给定策略下，某个状态动作对的预期收益与当前状态的值函数估计之间的差异
+        # advantages=returns−value_preds
+        # returns 是回溯中每个时间步的折扣后的累积奖励值
+        # value_preds 是回溯中每个时间步的状态值函数的预测值
         advantages = rollout.returns[:-1] - rollout.value_preds[:-1]
         advantages = (advantages - advantages.mean()) / (advantages.std() + 1e-5)
+        ######################################################################
 
         value_loss_epoch = []
         policy_loss_epoch = []
@@ -115,6 +144,7 @@ class PPOTrainer(BaseTrainer):
         # Train for num_sgd_steps iterations (compared to A2C which only
         # train one iteration)
         for e in range(self.num_sgd_steps):
+            #生成用于训练的数据样本生成器
             data_generator = rollout.feed_forward_generator(advantages, self.mini_batch_size)
 
             for sample in data_generator:
